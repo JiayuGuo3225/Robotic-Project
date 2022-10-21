@@ -1,2 +1,10 @@
 # Robotic-Project
-Robotic
+Final Project
+
+EE599: Robotic Mobility
+
+Team name: Pending
+
+Robot name: Pending
+
+Team member: 
