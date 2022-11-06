@@ -7,4 +7,5 @@ Team name: Pending
 
 Robot name: Pending
 
-Team member: 
+Team member: mingqixu
+                donghao
