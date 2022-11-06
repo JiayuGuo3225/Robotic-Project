@@ -8,5 +8,5 @@ Team name: Pending
 Robot name: Pending
 
 Team member: mingqixu
-                donghao
+                Donghao Zhao
                 jiayu
