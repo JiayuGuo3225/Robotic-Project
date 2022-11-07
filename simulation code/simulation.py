@@ -49,6 +49,13 @@ elif 8 < time < 10: # left arm swing
     y2 = 
     time += 1
 
+elif 10 < time < 12: # docking
+    y1 = 
+    y2 = 
+elif 12 < time < 15: # lifting
+    y1 = 
+    y2 = 
+
 # 三号机器人机械臂摆动随时间变化的轨迹
 y3 = 
 
