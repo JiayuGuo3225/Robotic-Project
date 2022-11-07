@@ -21,7 +21,7 @@ import numpy as np
 # plt.show()
 
 # leg length = 16
-
+time = 0
 # 一号机器人起始位置 position (16, 0)
 x1 = 16
 
@@ -33,10 +33,21 @@ x3 = 82
 
 # 机械臂摆动随时间变化的轨迹
 # 一号机器人机械臂摆动随时间变化的轨迹
-y1 = 
+
+if 0 < time < 2: # right arm swing
+    y1 = 
+    time += 1
+elif 2 < time < 4: # left arm swing
+    y1 = 
+    time += 1
 
 # 二号机器人机械臂摆动随时间变化的轨迹
-y1 = 
+elif 4 < time < 6: # right arm swing
+    y2 = 
+    time += 1
+elif 8 < time < 10: # left arm swing
+    y2 = 
+    time += 1
 
 # 三号机器人机械臂摆动随时间变化的轨迹
 y3 = 
