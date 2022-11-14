@@ -1,88 +1,310 @@
-import matplotlib.animation as animation
 import matplotlib.pyplot as plt
-import numpy as np
+import math as m
 
-# 测试正余弦函数动图
-# X = np.arange(0, 10, 0.01)  # X shape： (N,)
-# Ys = [np.sin(X + k/10.0) for k in range(100)]  # Ys shape： (k, N)
+# 1 robot collaborations 
+def cord1(x1, y1, left, right, angleL, angleR):
 
-# fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(8, 4))
+    y = [0, 122]
+    x = [0, 122]
+    # left, right为机器人的左臂和右臂长度，angleL， angleR为机器人左臂和右臂扭转角度
+    X1 = [x1 - left * m.cos(angleL), x1, x1 + right * m.cos(angleR)]# (x1, y1)为机器人中心坐标
+    Y1 = [y1 + left * m.sin(angleL), y1, y1 + right * m.sin(angleR)]#纵坐标
+    return x, y, X1, Y1
 
-# def animate(i):
-#     axes[0].cla()
-#     axes[0].plot(X, Ys[i])
-#     axes[0].set_title(f'y = sin(x + {i}/10)')
+# start position
+x, y, X1, Y1 = cord1(17, 0, 16, 16, 0, 0)
+plt.figure( figsize=(10,10) )
+plt.subplot(3, 3, 1)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start Position")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-#     axes[1].cla()
-#     axes[1].hist(Ys[i], bins=50, orientation='horizontal')
 
-# ani = animation.FuncAnimation(fig, animate, frames=50, interval=50)
-# ani.save('matplotlib-animation-hist.gif')
-# plt.show()
+x, y, X1, Y1 = cord1(17, 20, 16, 16, 0, 0)
+plt.subplot(3, 3, 2)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("Incline Climbing ")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-# leg length = 16
-time = 0
-# 一号机器人起始位置 position (16, 0)
-x1 = 16
 
-# 二号机器人起始位置， start position (49, 0)
-x2 = 49
+x, y, X1, Y1 = cord1(17, 30, 16, 16, 0, 0)
+plt.subplot(3, 3, 3)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("Incine Climbing stage")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-# 三号机器人起始位置，start position (82, 0) 
-x3 = 82
+x, y, X1, Y1 = cord1(17, 40, 16, 16, 0, 0)
+plt.subplot(3, 3, 4)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("Incine Climbing stage")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-# 机械臂摆动随时间变化的轨迹
-# 一号机器人机械臂摆动随时间变化的轨迹
 
-if 0 < time < 2: # right arm swing
-    y1 = 
-    time += 1
-elif 2 < time < 4: # left arm swing
-    y1 = 
-    time += 1
+x, y, X1, Y1 = cord1(17, 60, 16, 16, 0, 0)
+plt.subplot(3, 3, 5)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("Incine Climbing stage")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-# 二号机器人机械臂摆动随时间变化的轨迹
-elif 4 < time < 6: # right arm swing
-    y2 = 
-    time += 1
-elif 8 < time < 10: # left arm swing
-    y2 = 
-    time += 1
 
-elif 10 < time < 12: # docking
-    y1 = 
-    y2 = 
-elif 12 < time < 15: # lifting
-    y1 = 
-    y2 = 
+x, y, X1, Y1 = cord1(17, 80, 16, 16, 0, 0)
+plt.subplot(3, 3, 6)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("Incine Climbing stage")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-# 三号机器人机械臂摆动随时间变化的轨迹
-y3 = 
 
-fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(8, 4))
+x, y, X1, Y1 = cord1(17, 90, 16, 16, 0, 0)
+plt.subplot(3, 3, 7)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("Incine Climbing stage")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-def animate(i):
-    axes[0].cla()
-    axes[0].plot(x1, y1[i])
-    axes[0].set_title(f'y = ')
 
-    axes[1].cla()
-    axes[1].hist(y1[i], bins=50, orientation='horizontal')
-    
-    axes[0].cla()
-    axes[0].plot(x2, y2[i])
-    axes[0].set_title(f'y = ')
+x, y, X1, Y1 = cord1(17, 100, 16, 16, 0, 0)
+plt.subplot(3, 3, 8)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("Incine Climbing stage")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-    axes[1].cla()
-    axes[1].hist(y2[i], bins=50, orientation='horizontal')
-    
-    axes[0].cla()
-    axes[0].plot(x3, y3[i])
-    axes[0].set_title(f'y = ')
 
-    axes[1].cla()
-    axes[1].hist(y3[i], bins=50, orientation='horizontal')
+x, y, X1, Y1 = cord1(17, 122, 16, 16, 0, 0)
+plt.subplot(3, 3, 9)
+plt.plot(X1,Y1,'o-',color = 'r',label="robot1")#s-:方形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("Reach the top")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
 
-ani = animation.FuncAnimation(fig, animate, frames=50, interval=50)
-ani.save('matplotlib-animation-hist.gif')
+plt.tight_layout()
+plt.show()
+
+
+# 2 robots collaborations 
+def cord2(x1, y1, x2, y2, left, right, angleL, angleR):
+    y = [0, 122]
+    x = [0, 122]
+    # left, right为机器人的左臂和右臂长度，angleL， angleR为机器人左臂和右臂扭转角度
+    # robot1
+    X1 = [x1 - left * m.cos(angleL), x1, x1 + right * m.cos(angleR)]# (x1, y1)为机器人中心坐标
+    Y1 = [y1 + left * m.sin(angleL), y1, y1 + right * m.sin(angleR)]#纵坐标
+    # robot2
+    X2 = [x2 - left * m.cos(angleL), x2, x2 + right * m.cos(angleR)]# (x2, y2)为机器人中心坐标
+    Y2 = [y2 + left * m.sin(angleL), y2, y2 + right * m.sin(angleR)]#纵坐标
+    return x, y, X1, Y1, X2, Y2
+
+# start position
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.figure( figsize=(10,10) )
+plt.subplot(3, 3, 1)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 2)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 3)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 4)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 5)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 6)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 7)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 8)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2 = cord2(17, 0, 49, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 9)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+plt.tight_layout()
+plt.show()
+
+# 3 robots collaborations 
+def cord3(x1, y1, x2, y2, x3, y3, left, right, angleL, angleR):
+    y = [0, 122]
+    x = [0, 122]
+    # left, right为机器人的左臂和右臂长度，angleL， angleR为机器人左臂和右臂扭转角度
+    # robot1
+    X1 = [x1 - left * m.cos(angleL), x1, x1 + right * m.cos(angleR)]# (x1, y1)为机器人中心坐标
+    Y1 = [y1 + left * m.sin(angleL), y1, y1 + right * m.sin(angleR)]#纵坐标
+    # robot2
+    X2 = [x2 - left * m.cos(angleL), x2, x2 + right * m.cos(angleR)]# (x2, y2)为机器人中心坐标
+    Y2 = [y2 + left * m.sin(angleL), y2, y2 + right * m.sin(angleR)]#纵坐标
+    # robot3
+    X3 = [x3 - left * m.cos(angleL), x3, x3 + right * m.cos(angleR)]# (x3, y3)为机器人中心坐标
+    Y3 = [y3 + left * m.sin(angleL), y3, y3 + right * m.sin(angleR)]#纵坐标
+    return x, y, X1, Y1, X2, Y2, X3, Y3
+
+# start position
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.figure( figsize=(10,10) )
+plt.subplot(3, 3, 1)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 2)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 3)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 4)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 5)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 6)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 7)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 8)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+x, y, X1, Y1, X2, Y2, X3, Y3 = cord3(17, 0, 49, 0, 81, 0, 16, 16, 0, 0)
+plt.subplot(3, 3, 9)
+plt.plot(X1,Y1,'s-',color = 'r',label="robot1")#s-:方形
+plt.plot(X2,Y2,'s-',color = 'g',label="robot2")#o-:圆形
+plt.plot(X3,Y3,'s-',color = 'b',label="robot3")
+plt.plot(x, y, color = 'w' )
+plt.xlabel("start line")#横坐标名字
+plt.ylabel("vertical distance")#纵坐标名字
+plt.legend(loc = "best")#图例
+
+plt.tight_layout()
 plt.show()
