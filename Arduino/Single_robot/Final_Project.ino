@@ -29,15 +29,29 @@
 
 
 #define DEBUG True    //debug mode
-#define FREQUENCY 10  //unit: ms
+#define CONTROL_FREQUENCY 100  //unit: ms
+#define STUCK_SPEED
 
 const uint8_t DXL_ID = 3;
 const float DXL_PROTOCOL_VERSION = 2.0;
 
 DynamixelShield dxl;
 
-int rotateMotor1;
-int rotateMotor2;
+int rotateMotor1 = 45;
+int rotateMotor2 = 45;
+
+int duty[] = {0, 0, 0, 0};
+int backoff[] = {0, 0, 0, 0};
+int backoffStatus[] = {0, 0, 0, 0};
+
+int desiredSpeed[] = {0, 0, 0, 0};
+int currentSpeed[] = {0, 0, 0, 0};
+int lastSpeed[] = {0, 0, 0, 0};
+int accSpeed[] = {0, 0, 0, 0};
+int outputSpeed[] = {0, 0, 0, 0};
+float P = -1;
+float I = 0;
+float D = 0;
 
 //This namespace is required to use Control table item names
 using namespace ControlTableItem;
@@ -125,21 +139,59 @@ void loop() {
   //reverse2();
   delay(2000);
 
+  currentSpeed[0] =  dxl.getPresentVelocity(1);
+  currentSpeed[1] =  dxl.getPresentVelocity(2);
+  currentSpeed[2] =  dxl.getPresentVelocity(3);
+  currentSpeed[3] =  dxl.getPresentVelocity(4);
+
   while (rotateMotor2 < 135){
-    duty1 = 16;
-    duty2 = 8;
-    duty3 = 1;
-    duty4 = 1;
-    if (dxl.getPresentVelocity(1) < 200) duty1 = -10;
-    if (dxl.getPresentVelocity(2) < 200) duty2 = -10;
-    if (dxl.getPresentVelocity(3) < 200) duty3 = -10;
-    if (dxl.getPresentVelocity(4) < 200) duty4 = -10;
-    delay(10);
+    duty[0] = 16;
+    duty[1] = 8;
+    duty[2] = 1;
+    duty[3] = 1;
+    desiredSpeed[0] = 400;
+    desiredSpeed[1] = 200;
+    desiredSpeed[2] = 1;
+    desiredSpeed[3] = 1;
+
+    for (int i = 0; i < 3; i ++){
+
+      // speed PID control
+      outputSpeed[i] = desiredSpeed[i];
+      outputSpeed[i] += -1 * (currentSpeed[i] - desiredSpeed[i]);   // P
+      outputSpeed[i] += 0 * (currentSpeed[i] - lastSpeed[i]);       // D
+      accSpeed += (currentSpeed[i] - desiredSpeed[i]);              // I
+      outputSpeed[i] += 0 * accSpeed[i];
+
+
+      // backoff determine
+      if (speed[i] < 100){
+        backoff[i] ++;
+        if (backoff[i] > 10) backoffStatus[i] = 1;
+      }
+      else backoff[i] = 0;
+
+      // backoff strategy
+      if (backoffStatus[i] == 1) {
+        outputSpeed[i] = -200;
+        backoff[i] --;
+        if (backoff[i] == 0){
+          backoffStatus[i] = 0;
+          accSpeed[i] = 0;
+        }
+      }
+      lastSpeed[i] = currentSpeed[i];
+
+    }
     
-    go_1(duty1, duty2);
-    go_2(duty3, duty4);
-    rotateMotor2++;
     
+    go_1(outputSpeed[1]/20, outputSpeed[2]/20);
+    go_2(outputSpeed[3]/20, outputSpeed[4]/20);
+
+    rotateMotor2 += 5;
+
+    delay(CONTROL_FREQUENCY);
+
   }
 
   dxl.setGoalVelocity(2, -95, UNIT_PERCENT);
