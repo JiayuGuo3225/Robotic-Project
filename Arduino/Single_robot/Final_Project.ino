@@ -56,7 +56,7 @@ int liftState2 = 0;
 int duty[] = {0, 0, 0, 0};
 int backoff[] = {0, 0, 0, 0};
 int backoffStatus[] = {0, 0, 0, 0};
-int torquemode[] = {1, 1, 0, 0, 1, 1, 0, 0};
+int torqueMode[] = {1, 1, 0, 0, 1, 1, 0, 0};
 
 int desiredSpeed[] = {0, 0, 0, 0};
 int currentSpeed[] = {0, 0, 0, 0};
@@ -81,12 +81,14 @@ void reverse2(){
   return;
 }
 
-void positionControl(int id, int position){
-  dxl.setGoalPosition(id, position, UNIT_DEGREE);
+void positionControl(int id, int positionX){
+  dxl.setGoalPosition(id, positionX, UNIT_DEGREE);
+   DEBUG_SERIAL.println("呵额");
+   DEBUG_SERIAL.println(positionX);
   return;
 }
 
-void positionDetection(int id){
+int positionDetection(int id){
   lastPosition = dxl.getPresentPosition(id, UNIT_DEGREE);
   DEBUG_SERIAL.print("Present Position(degree) : ");
   DEBUG_SERIAL.println(dxl.getPresentPosition(id, UNIT_DEGREE));
@@ -95,36 +97,40 @@ void positionDetection(int id){
 
 void lift1(){
   if (liftState1 == 0){
+    DEBUG_SERIAL.println("liftState1xx");
     for (int i = 0; i < 10; i++){
       dxl.setGoalPosition(3, (150 + 3 * i), UNIT_DEGREE);
       delay(100);
     }
-    liftState1 == 1;
+    liftState1 = 1;
   }
   else{
+    DEBUG_SERIAL.println("liftState1yy");
     for (int i = 0; i < 10; i++){
       dxl.setGoalPosition(3, (180 - 3 * i), UNIT_DEGREE);
       delay(100);
     }
-    liftState1 == 0;
+    liftState1 = 0;
   }
-  return;
+  return ;
 }
 
 void lift2(){
   if (liftState2 == 0){
+    DEBUG_SERIAL.println("liftState2xx");
     for (int i = 0; i < 10; i++){
-      dxl.setGoalPosition(7, (150 + 3 * i), UNIT_DEGREE);
+      dxl.setGoalPosition(7, (150 - 3 * i), UNIT_DEGREE);
       delay(100);
     }
-    liftState1 == 1;
+    liftState2 = 1;
   }
   else{
+    DEBUG_SERIAL.println("liftState2yy");
     for (int i = 0; i < 10; i++){
-      dxl.setGoalPosition(7, (180 - 3 * i), UNIT_DEGREE);
+      dxl.setGoalPosition(7, (120 + 3 * i), UNIT_DEGREE);
       delay(100);
     }
-    liftState1 == 0;
+    liftState2 = 0;
   }
   return;
 }
@@ -145,7 +151,7 @@ void setup() {
   dxl.ping(i);
   // Turn off torque when configuring items in EEPROM area
   dxl.torqueOff(i);
-  if (torqueMode[i])
+  if (torqueMode[i-1])
    dxl.setOperatingMode(i, OP_VELOCITY);
   else
     dxl.setOperatingMode(i, OP_POSITION);
@@ -154,9 +160,21 @@ void setup() {
   delay(1000);
 
   dxl.setGoalPosition(8, 240, UNIT_DEGREE);
+
+  delay(500);
+  
   dxl.setGoalPosition(4, 60, UNIT_DEGREE);
 
+  delay(500);
+  
+  //dxl.setGoalPosition(3, 150, UNIT_DEGREE);
+
+  //delay(500);
+  
+  //dxl.setGoalPosition(7, 150, UNIT_DEGREE);
+
   delay(2000);
+  
 }
 
 // movement for 1 servo
@@ -167,17 +185,19 @@ void servo1(float duty){
 }
 
 void servo2(float duty) {
+  if (duty < 0) duty = -duty - 100;
   dxl.setGoalVelocity(2, duty, UNIT_PERCENT);
 }
 
 void servo3(float duty){
   if (duty > 0) duty = duty - 100;
   else if (duty < 0) duty = -duty;
-  dxl.setGoalVelocity(3, duty, UNIT_PERCENT);
+  dxl.setGoalVelocity(5, duty, UNIT_PERCENT);
 }
 
 void servo4(float duty) {
-  dxl.setGoalVelocity(4, duty, UNIT_PERCENT);
+  if (duty < 0) duty = -duty - 100;
+  dxl.setGoalVelocity(6, duty, UNIT_PERCENT);
 }
 
 
@@ -207,32 +227,49 @@ void loop() {
   //reverse2();
   //delay(2000);
 
-  lift1();
-
+   lift1();
+  DEBUG_SERIAL.println("111111111111");
+  delay(1000);
   while (liftState1 == 1){
     currentPosition1 = positionDetection(4);
     currentPosition2 = positionDetection(8);
-    while (currentPosition1 < 65 && currentPosition1 >55 && robotState1 = 0)
+    while (currentPosition1 < 65 && currentPosition1 > 55 && robotState1 == 0){
+      DEBUG_SERIAL.println("5");
       robotState1 = 1;
-    while (currentPosition2 < 180 && robotState1){
+    }
+    while (currentPosition2 < 195 && robotState1 == 1){
       go_1(1, 1);
       go_2(1, 1);
       lift1();
+      DEBUG_SERIAL.println("6");
+      robotState1 = 0;
+      
     }
 
-    if (robotState1 = 0){
-      go_1(-15, -5);
+    if (robotState1 == 0 && liftState1 == 1){
+      go_1(-20, -10);
+      DEBUG_SERIAL.println("7");
       go_2(1 ,1);
-      if (currentPosition1 > 65)
+      if (currentPosition1 > 65){
+        DEBUG_SERIAL.println(">65");
         desirePosition1 = currentPosition1 - 5;
-      else if (currentPosition1 < 55)
+
+        DEBUG_SERIAL.println(desirePosition1);}
+      else if (currentPosition1 < 55){
+        DEBUG_SERIAL.println("<55");
         desirePosition1 = currentPosition1 + 5;
+        positionControl(4,desirePosition1);
+
+        }
+     
      positionControl(4,desirePosition1);
+      
     }
 
-    else if (robotState1 = 1){
-      go_1(20, 10);
+    else if (robotState1 == 1){
+      go_1(40, 20);
       go_2(1, 1);
+      DEBUG_SERIAL.println("8");
       //desireposition1 = currentposition1 + 5;
       desirePosition2 = currentPosition2 - 5;
       //positioncontrol(4,desireposition1);
@@ -241,21 +278,27 @@ void loop() {
   }
 
   lift2();
-  
+  DEBUG_SERIAL.println("22222222222222");
+  delay(1000);
   while (liftState2 == 1){
     currentPosition1 = positionDetection(4);
     currentPosition2 = positionDetection(8);
-    while (currentPosition2 < 245 && currentPosition2 >235 && robotState2 = 0)
+    while (currentPosition2 < 245 && currentPosition2 > 235 && robotState2 == 0){
       robotState2 = 1;
-    while (currentPosition1 > 120 && robotState2){
+      DEBUG_SERIAL.println("1");
+    }
+    while (currentPosition1 > 105 && robotState2 == 1 ){
       go_1(1, 1);
       go_2(1, 1);
       lift2();
+      DEBUG_SERIAL.println("2");
+      robotState2 = 0;
     }
 
-    if (robotState2 = 0){
+    if (robotState2 == 0 && liftState2 == 1){
+      DEBUG_SERIAL.println("3");
       go_1(1, 1);
-      go_2(-5 ,-15);
+      go_2(-10 ,-30);
       if (currentPosition2 > 245)
         desirePosition2 = currentPosition2 - 5;
       else if (currentPosition2 < 235)
@@ -263,15 +306,18 @@ void loop() {
      positionControl(8,desirePosition2);
     }
 
-    else if (robotState2 = 1){
+    else if (robotState2 == 1){
       go_1(1, 1);
-      go_2(10, 20);
+      go_2(20, 40);
+      DEBUG_SERIAL.println("4");
       desirePosition1 = currentPosition1 + 5;
-      desirePosition2 = currentPosition2 - 5;
+      if 
+     
       positionControl(4,desirePosition1);
-      positionControl(8,desirePosition2);
+    
     }
   }
+
 
 
   while (rotateMotor2 < 135){
