@@ -40,9 +40,23 @@ DynamixelShield dxl;
 int rotateMotor1 = 45;
 int rotateMotor2 = 45;
 
+int robotState1 = 0;
+int robotState2 = 0;
+
+int torqueNumber = 8;
+int desirePosition1 = 0;
+int desirePosition2 = 0;
+int currentPosition1 = 0;
+int currentPosition2 = 0;
+int lastPosition = 0;
+
+int liftState1 = 0; //0 is not lift, 1 is lift
+int liftState2 = 0;
+
 int duty[] = {0, 0, 0, 0};
 int backoff[] = {0, 0, 0, 0};
 int backoffStatus[] = {0, 0, 0, 0};
+int torquemode[] = {1, 1, 0, 0, 1, 1, 0, 0};
 
 int desiredSpeed[] = {0, 0, 0, 0};
 int currentSpeed[] = {0, 0, 0, 0};
@@ -56,14 +70,62 @@ float D = 0;
 //This namespace is required to use Control table item names
 using namespace ControlTableItem;
 void reverse1(){
-dxl.setGoalVelocity(8, -95, UNIT_PERCENT);
+  dxl.setGoalVelocity(8, -95, UNIT_PERCENT);
   delay(1000);
   return;
 }
 
 void reverse2(){
-dxl.setGoalVelocity(9, 5, UNIT_PERCENT);
+  dxl.setGoalVelocity(9, 5, UNIT_PERCENT);
   delay(1000);
+  return;
+}
+
+void positionControl(int id, int position){
+  dxl.setGoalPosition(id, position, UNIT_DEGREE);
+  return;
+}
+
+void positionDetection(int id){
+  lastPosition = dxl.getPresentPosition(id, UNIT_DEGREE);
+  DEBUG_SERIAL.print("Present Position(degree) : ");
+  DEBUG_SERIAL.println(dxl.getPresentPosition(id, UNIT_DEGREE));
+  return lastPosition;
+}
+
+void lift1(){
+  if (liftState1 == 0){
+    for (int i = 0; i < 10; i++){
+      dxl.setGoalPosition(3, (150 + 3 * i), UNIT_DEGREE);
+      delay(100);
+    }
+    liftState1 == 1;
+  }
+  else{
+    for (int i = 0; i < 10; i++){
+      dxl.setGoalPosition(3, (180 - 3 * i), UNIT_DEGREE);
+      delay(100);
+    }
+    liftState1 == 0;
+  }
+  return;
+}
+
+void lift2(){
+  if (liftState2 == 0){
+    for (int i = 0; i < 10; i++){
+      dxl.setGoalPosition(7, (150 + 3 * i), UNIT_DEGREE);
+      delay(100);
+    }
+    liftState1 == 1;
+  }
+  else{
+    for (int i = 0; i < 10; i++){
+      dxl.setGoalPosition(7, (180 - 3 * i), UNIT_DEGREE);
+      delay(100);
+    }
+    liftState1 == 0;
+  }
   return;
 }
 
@@ -77,38 +139,44 @@ void setup() {
   dxl.begin(1000000);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
+
+  for (int i = 1; i <= torqueNumber; i++){
   // Get DYNAMIXEL information
-  dxl.ping(8);
-  dxl.ping(9);
+  dxl.ping(i);
   // Turn off torque when configuring items in EEPROM area
-  dxl.torqueOff(8);
-  dxl.setOperatingMode(8, OP_VELOCITY);
-  dxl.torqueOn(8);
-  dxl.torqueOff(9);
-  dxl.setOperatingMode(9, OP_VELOCITY);
-  dxl.torqueOn(9);
+  dxl.torqueOff(i);
+  if (torqueMode[i])
+   dxl.setOperatingMode(i, OP_VELOCITY);
+  else
+    dxl.setOperatingMode(i, OP_POSITION);
+  dxl.torqueOn(i);
+  }
+  delay(1000);
+
+  dxl.setGoalPosition(8, 240, UNIT_DEGREE);
+  dxl.setGoalPosition(4, 60, UNIT_DEGREE);
 
   delay(2000);
 }
 
 // movement for 1 servo
-servo1(float duty){
+void servo1(float duty){
   if (duty > 0) duty = duty - 100;
   else if (duty < 0) duty = -duty;
   dxl.setGoalVelocity(1, duty, UNIT_PERCENT);
 }
 
-servo2(float duty) {
+void servo2(float duty) {
   dxl.setGoalVelocity(2, duty, UNIT_PERCENT);
 }
 
-servo3(float duty){
+void servo3(float duty){
   if (duty > 0) duty = duty - 100;
   else if (duty < 0) duty = -duty;
   dxl.setGoalVelocity(3, duty, UNIT_PERCENT);
 }
 
-servo4(float duty) {
+void servo4(float duty) {
   dxl.setGoalVelocity(4, duty, UNIT_PERCENT);
 }
 
@@ -128,21 +196,83 @@ void loop() {
   
   // Please refer to e-Manual(http://emanual.robotis.com) for available range of value. 
   // Set Goal Velocity using RAW unit
-  dxl.setGoalVelocity(2, 8, UNIT_PERCENT);
-  dxl.setGoalVelocity(1, -84, UNIT_PERCENT);
-  dxl.setGoalVelocity(3, 1, UNIT_PERCENT);
-  dxl.setGoalVelocity(4, 1, UNIT_PERCENT);
+  //dxl.setGoalVelocity(2, 8, UNIT_PERCENT);
+  //dxl.setGoalVelocity(1, -84, UNIT_PERCENT);
+  //dxl.setGoalVelocity(3, 1, UNIT_PERCENT);
+  //dxl.setGoalVelocity(4, 1, UNIT_PERCENT);
   
   //if (dxl.getPresentVelocity(8) < 200 )
  // reverse1();
   //if (dxl.getPresentVelocity(9) < 200 )
   //reverse2();
-  delay(2000);
+  //delay(2000);
 
-  currentSpeed[0] =  dxl.getPresentVelocity(1);
-  currentSpeed[1] =  dxl.getPresentVelocity(2);
-  currentSpeed[2] =  dxl.getPresentVelocity(3);
-  currentSpeed[3] =  dxl.getPresentVelocity(4);
+  lift1();
+
+  while (liftState1 == 1){
+    currentPosition1 = positionDetection(4);
+    currentPosition2 = positionDetection(8);
+    while (currentPosition1 < 65 && currentPosition1 >55 && robotState1 = 0)
+      robotState1 = 1;
+    while (currentPosition2 < 180 && robotState1){
+      go_1(1, 1);
+      go_2(1, 1);
+      lift1();
+    }
+
+    if (robotState1 = 0){
+      go_1(-15, -5);
+      go_2(1 ,1);
+      if (currentPosition1 > 65)
+        desirePosition1 = currentPosition1 - 5;
+      else if (currentPosition1 < 55)
+        desirePosition1 = currentPosition1 + 5;
+     positionControl(4,desirePosition1);
+    }
+
+    else if (robotState1 = 1){
+      go_1(20, 10);
+      go_2(1, 1);
+      //desireposition1 = currentposition1 + 5;
+      desirePosition2 = currentPosition2 - 5;
+      //positioncontrol(4,desireposition1);
+      positionControl(8,desirePosition2);
+    }
+  }
+
+  lift2();
+  
+  while (liftState2 == 1){
+    currentPosition1 = positionDetection(4);
+    currentPosition2 = positionDetection(8);
+    while (currentPosition2 < 245 && currentPosition2 >235 && robotState2 = 0)
+      robotState2 = 1;
+    while (currentPosition1 > 120 && robotState2){
+      go_1(1, 1);
+      go_2(1, 1);
+      lift2();
+    }
+
+    if (robotState2 = 0){
+      go_1(1, 1);
+      go_2(-5 ,-15);
+      if (currentPosition2 > 245)
+        desirePosition2 = currentPosition2 - 5;
+      else if (currentPosition2 < 235)
+        desirePosition2 = currentPosition2 + 5;
+     positionControl(8,desirePosition2);
+    }
+
+    else if (robotState2 = 1){
+      go_1(1, 1);
+      go_2(10, 20);
+      desirePosition1 = currentPosition1 + 5;
+      desirePosition2 = currentPosition2 - 5;
+      positionControl(4,desirePosition1);
+      positionControl(8,desirePosition2);
+    }
+  }
+
 
   while (rotateMotor2 < 135){
     duty[0] = 16;
@@ -194,10 +324,10 @@ void loop() {
 
   }
 
-  dxl.setGoalVelocity(2, -95, UNIT_PERCENT);
-  dxl.setGoalVelocity(1, 15, UNIT_PERCENT);
-  dxl.setGoalVelocity(3, 1, UNIT_PERCENT);
-  dxl.setGoalVelocity(4, 1, UNIT_PERCENT);
+  //dxl.setGoalVelocity(2, -95, UNIT_PERCENT);
+  //dxl.setGoalVelocity(1, 15, UNIT_PERCENT);
+  //dxl.setGoalVelocity(3, 1, UNIT_PERCENT);
+  //dxl.setGoalVelocity(4, 1, UNIT_PERCENT);
   go_1(5, 15);
   go_2(1, 1);
 
@@ -209,10 +339,10 @@ void loop() {
   //DEBUG_SERIAL.println(dxl.getPresentVelocity(9));
   delay(1000);
 
-  dxl.setGoalVelocity(4, 16, UNIT_PERCENT);
-  dxl.setGoalVelocity(3, -92, UNIT_PERCENT);
-  dxl.setGoalVelocity(1, 1, UNIT_PERCENT);
-  dxl.setGoalVelocity(2, 1, UNIT_PERCENT);
+  //dxl.setGoalVelocity(4, 16, UNIT_PERCENT);
+  //dxl.setGoalVelocity(3, -92, UNIT_PERCENT);
+  //dxl.setGoalVelocity(1, 1, UNIT_PERCENT);
+  //dxl.setGoalVelocity(2, 1, UNIT_PERCENT);
   go_1(16, 8);
   go_2(1, 1);
 
