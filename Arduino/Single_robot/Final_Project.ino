@@ -129,6 +129,7 @@ void setup() {
 
   for (int i = 1; i <= torqueNumber; i++){
   // Get DYNAMIXEL information
+  DEBUG_SERIAL.println(i);
   dxl.ping(i);
   // Turn off torque when configuring items in EEPROM area
   dxl.torqueOff(i);
@@ -219,7 +220,7 @@ void loop() {
     if (currentPosition1 < 75 && currentPosition1 > 55 && robotState1 == 0){
       DEBUG_SERIAL.println("5");
       robotState1 = 1;
-      desirePosition2 = 225;
+      desirePosition2 = 230;
     }
     
     if (robotState1 == 0 && liftState1 == 1){
@@ -227,32 +228,37 @@ void loop() {
       DEBUG_SERIAL.println("7");
       DEBUG_SERIAL.println(dxl.getPresentVelocity(1, UNIT_DEGREE));
       go_2(1 ,1);
-      if (currentPosition1 > 75){
+      if (currentPosition1 > 70){
         DEBUG_SERIAL.println(">65");
-        desirePosition1 = desirePosition1 - 5;
-
-        DEBUG_SERIAL.println(desirePosition1);}
+        if (desirePosition1 - currentPosition1 > -10){//123
+          desirePosition1 = desirePosition1 - 5;
+        }
+        DEBUG_SERIAL.println(desirePosition1);
+      }
       else if (currentPosition1 < 55){
         DEBUG_SERIAL.println("<55");
-        desirePosition1 = desirePosition1 + 5;
+        if (desirePosition1 - currentPosition1 < 10){
+          desirePosition1 = desirePosition1 + 5;
+        }
       }
      positionControl(4,desirePosition1);
     }
 
     if (robotState1 == 1){
-      go_1(40, 20);
+      go_1(60, 30);
       DEBUG_SERIAL.println(dxl.getPresentVelocity(1, UNIT_DEGREE));
       go_2(1, 1);
       DEBUG_SERIAL.println("8");
-      
-      desirePosition2 = desirePosition2 - 3;
+      if (desirePosition2 - currentPosition2 > -15){
+        desirePosition2 = desirePosition2 - 3;
+      }
      // if (desirePosition2 < 195)
        // desirePosition2 = 195;
 
       positionControl(8,desirePosition2);
     }
 
-    if (currentPosition2 <= 195 && robotState1 == 1){
+    if (currentPosition2 <= 210 && robotState1 == 1){
       go_1(1, 1);
       go_2(1, 1);
       lift1();
@@ -275,31 +281,39 @@ void loop() {
     if (currentPosition2 < 245 && currentPosition2 > 225 && robotState2 == 0){
       robotState2 = 1;
       DEBUG_SERIAL.println("1");
-      desirePosition1 = 75;
+      desirePosition1 = 70;
     }
 
     if (robotState2 == 0 && liftState2 == 1){
       DEBUG_SERIAL.println("3");
       go_1(1, 1);
       go_2(-20 ,-40);
-      if (currentPosition2 > 245)
-        desirePosition2 = desirePosition2 - 5;
-      else if (currentPosition2 < 225)
-        desirePosition2 = desirePosition2 + 5;
+      if (currentPosition2 > 245){
+        if (desirePosition2 - currentPosition2 > -10){
+          desirePosition2 = desirePosition2 - 5;
+        }
+      }
+      else if (currentPosition2 < 220){
+        if (desirePosition2 - currentPosition2 < 10){
+          desirePosition2 = desirePosition2 + 5;
+        }
+      }
      positionControl(8,desirePosition2);
     }
-
+//累计加
     else if (robotState2 == 1){
       go_1(1, 1);
-      go_2(20, 40);
+      go_2(30, 60);
       DEBUG_SERIAL.println("4");
-      desirePosition1 = desirePosition1 + 3;
+      if (desirePosition1 - currentPosition1 < 10){
+        desirePosition1 = desirePosition1 + 3;
+      }
      
       positionControl(4,desirePosition1);
     
     }
 
-    if (currentPosition1 > 115 && robotState2 == 1 ){
+    if (currentPosition1 > 90 && robotState2 == 1 ){
       go_1(1, 1);
       go_2(1, 1);
       lift2();
@@ -311,7 +325,6 @@ void loop() {
   }
   
 }
-
 
 
 
