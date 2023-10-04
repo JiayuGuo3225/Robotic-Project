@@ -3,10 +3,6 @@ Final Project
 
 EE599: Robotic Mobility
 
-Team name: Pending
-
-Robot name: Pending
-
 Team member: mingqixu
-                Donghao Zhao
-                jiayu
+             Donghao Zhao
+             jiayu
